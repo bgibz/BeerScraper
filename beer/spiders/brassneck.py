@@ -2,8 +2,8 @@
 import scrapy
 from scrapy.selector import Selector
 
-from beer.items import BeerItem
-
+from beer.items import Beer
+from beer.items import Brewery
 
 class BrassneckSpider(scrapy.Spider):
 
@@ -25,38 +25,49 @@ class BrassneckSpider(scrapy.Spider):
             f.write(response.body)
         self.log('Saved file %s' % filename)
 
+        brewery = Brewery()
+        brewery['name'] = 'Brassneck Brewery'
+        brewery['address'] = '2148 Main St Vancouver BC'
+        brewery['url'] = 'http://brassneck.ca'
+        brewery['growlers'] = []
+        brewery['tasting_room'] = []
+
         ontap = Selector(response).xpath('//*[@id="ontap-footer"]/ul/li')
         self.log('Extracted list of beers on tap')
         for beer in ontap:
-            item = BeerItem()
-            self.log('URL:')
+            item = Beer()
             url = beer.xpath('./a/@href').extract()
             item['url'] = url[0]
-            self.log(url[0])
-            self.log('BEER NAME:')
+            # self.log(url[0])
+            # self.log('BEER NAME:')
             beername = beer.xpath('./a/span/text()').extract()
-            self.log(beername[0].strip())
-            item['title'] = beername[0].strip()
-            self.log('BEER TYPE:')
+            # self.log(beername[0].strip())
+            item['name'] = beername[0].strip()
+            # self.log('BEER TYPE:')
             beertype = beer.xpath('./a/ul/li/text()').extract()
-            self.log(beertype[0].strip())
+            # self.log(beertype[0].strip())
             item['style'] = beertype[0].strip()
-            item['brewery'] = "Brassneck"
+            item['abv'] = beertype[1].strip()
+            brewery['tasting_room'].append(item)
 
         growlers = Selector(response).xpath(('//*[@id="fills-footer"]/ul/li'))
         self.log('Extracted list of beers for growler fill:')
         for beer in growlers:
-            item = BeerItem()
-            self.log('URL:')
+            item = Beer()
             url = beer.xpath('./a/@href').extract()
             item['url'] = url[0]
-            self.log(url[0])
-            self.log('BEER NAME:')
+            # self.log(url[0])
+            # self.log('BEER NAME:')
             beername = beer.xpath('./a/span/text()').extract()
-            self.log(beername[0].strip())
-            item['title'] = beername[0].strip()
-            self.log('BEER TYPE:')
+            # self.log(beername[0].strip())
+            item['name'] = beername[0].strip()
+            # self.log('BEER TYPE:')
             beertype = beer.xpath('./a/ul/li/text()').extract()
-            self.log(beertype[0].strip())
+            # self.log(beertype)
+            # self.log(beertype[0].strip())
             item['style'] = beertype[0].strip()
-            item['brewery'] = "Brassneck"
+            item['abv'] = beertype[1].strip()
+            brewery['growlers'].append(item)
+
+        # print('Brewery Extracted: \n %s' % brewery)
+        yield brewery

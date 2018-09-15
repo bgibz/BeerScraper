@@ -5,15 +5,26 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
 
-# import scrapy
 from scrapy.item import Item, Field;
 
 
-class BeerItem(Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    title = Field()
-    brewery = Field()
-    style = Field()
+class Brewery(Item):
+    name = Field()
+    address = Field()
+    growlers = Field()
+    tasting_room = Field()
     url = Field()
 
+
+class Beer(Item):
+    name = Field()
+    style = Field()
+    abv = Field()
+    url = Field()
+
+
+class BeerItem(Item):
+    name = Field()
+    style = Field()
+    abv = Field()
+    url = Field()

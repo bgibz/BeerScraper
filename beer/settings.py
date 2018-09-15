@@ -64,9 +64,11 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'beer.pipelines.BeerPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'beer.pipelines.BreweryPipeline': 300,
+}
+MONGO_URI = 'mongodb://vanbrewuser:VbDB18@ds018538.mlab.com:18538'
+MONGO_DATABASE = 'vanbrewalpha'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
