@@ -69,5 +69,5 @@ class BrassneckSpider(scrapy.Spider):
             item['abv'] = beertype[1].strip()
             brewery['growlers'].append(item)
 
-        # print('Brewery Extracted: \n %s' % brewery)
+        print("Yield Brewery")
         yield brewery
