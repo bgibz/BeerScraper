@@ -1,7 +1,8 @@
 import scrapy
 from scrapy.selector import Selector
 
-from beer.items import BeerItem
+from beer.items import Brewery
+from beer.items import Beer
 
 
 class BrassneckSpider(scrapy.Spider):
@@ -18,32 +19,35 @@ class BrassneckSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        page = response.url.split("/")[-2]
-        filename = 'mainstreetbeer-%s.html' % page
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-        self.log('Saved file %s' % filename)
+        brewery = Brewery()
+        brewery['name'] = 'Main Street Brewing'
+        brewery['address'] = '261 East Seventh Avenue, Vancouver, BC'
+        brewery['url'] = 'http://mainstreetbeer.ca/'
+        brewery['growlers'] = []
+        brewery['tasting_room'] = []
 
         wrapper = Selector(response).xpath("//div[@class='portfolio-wrap ']")[0]
-        self.log('Extracted list of beers on tap')
-        self.log("ONTAP: ")
         ontap = wrapper.xpath('./div/child::*')
-        # self.log('NEXT: %s' % ontap)
+
         for beer in ontap:
-            item = BeerItem()
+            item = Beer()
             url = beer.xpath('.//div[@class="work-info"]/a/@href').extract()
-            self.log('BEER: %s' % url[0])
+            item['url'] = url[0]
             name = beer.xpath('.//div[@class="vert-center"]/h3/text()').extract()
-            self.log('NAME: %s' % name[0])
+            item['name'] = name[0]
+            style = name[0].split()
+            item['style'] = style[-1].strip()
+            brewery['tasting_room'].append(item)
 
         growlerWrapper = Selector(response).xpath("//div[@class='portfolio-wrap ']")[0]
-        self.log('Extracted list of beers for fills')
-        self.log("GROWLERS: ")
         fills = wrapper.xpath('./div/child::*')
-        # self.log('NEXT: %s' % ontap)
         for beer in fills:
-            item = BeerItem()
+            item = Beer()
             url = beer.xpath('.//div[@class="work-info"]/a/@href').extract()
-            self.log('BEER: %s' % url[0])
+            item['url'] = url[0]
             name = beer.xpath('.//div[@class="vert-center"]/h3/text()').extract()
-            self.log('NAME: %s' % name[0])
+            style = name[0].split()
+            item['style'] = style[-1].strip()
+            brewery['growlers'].append(item)
+
+        yield brewery

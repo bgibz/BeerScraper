@@ -19,15 +19,9 @@ class BrassneckSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        page = response.url.split("/")[-2]
-        filename = 'brassneck-%s.html' % page
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-        self.log('Saved file %s' % filename)
-
         brewery = Brewery()
         brewery['name'] = 'Brassneck Brewery'
-        brewery['address'] = '2148 Main St Vancouver BC'
+        brewery['address'] = '2148 Main St, Vancouver BC'
         brewery['url'] = 'http://brassneck.ca'
         brewery['growlers'] = []
         brewery['tasting_room'] = []
