@@ -6,12 +6,9 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymongo
-import logging
 
 
 class BreweryPipeline(object):
-    #def process_item(self, item, spider):
-        #collection_name = 'breweries'
 
     def __init__(self, mongo_uri, mongo_db):
         print('init pipeline')
@@ -40,6 +37,14 @@ class BreweryPipeline(object):
 
     def process_item(self, item, spider):
         # how to handle each post
-        print('PROCESS ITEM')
-        self.db[self.collection_name].insert(dict(item))
+        collection = self.db[self.collection_name]
+        query = {'name': item['name']}
+        brewery = collection.find(query)
+        if brewery is None:
+            # add brewery
+            self.db[self.collection_name].insert(dict(item))
+        else:
+            # delete existing item, replace with scraped item
+            collection.delete_one(query)
+            collection.insert(dict(item))
         return item

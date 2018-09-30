@@ -67,7 +67,7 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
    'beer.pipelines.BreweryPipeline': 300,
 }
-MONGO_URI = 'mongodb://user:pass.mlab.com:18538/vanbrewalpha'
+MONGO_URI = 'mongodb://vanbrewuser:VbDB18@ds018538.mlab.com:18538'
 MONGO_DATABASE = 'vanbrewalpha'
 
 
