@@ -38,14 +38,9 @@ class BrassneckSpider(scrapy.Spider):
             item = Beer()
             url = beer.xpath('./a/@href').extract()
             item['url'] = url[0]
-            # self.log(url[0])
-            # self.log('BEER NAME:')
             beername = beer.xpath('./a/span/text()').extract()
-            # self.log(beername[0].strip())
             item['name'] = beername[0].strip()
-            # self.log('BEER TYPE:')
             beertype = beer.xpath('./a/ul/li/text()').extract()
-            # self.log(beertype[0].strip())
             item['style'] = beertype[0].strip()
             item['abv'] = beertype[1].strip()
             brewery['tasting_room'].append(item)
@@ -56,18 +51,11 @@ class BrassneckSpider(scrapy.Spider):
             item = Beer()
             url = beer.xpath('./a/@href').extract()
             item['url'] = url[0]
-            # self.log(url[0])
-            # self.log('BEER NAME:')
             beername = beer.xpath('./a/span/text()').extract()
-            # self.log(beername[0].strip())
             item['name'] = beername[0].strip()
-            # self.log('BEER TYPE:')
             beertype = beer.xpath('./a/ul/li/text()').extract()
-            # self.log(beertype)
-            # self.log(beertype[0].strip())
             item['style'] = beertype[0].strip()
             item['abv'] = beertype[1].strip()
             brewery['growlers'].append(item)
 
-        print("Yield Brewery")
         yield brewery
