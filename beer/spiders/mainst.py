@@ -1,4 +1,5 @@
 import scrapy
+import datetime
 from scrapy.selector import Selector
 
 from beer.items import Brewery
@@ -20,6 +21,7 @@ class BrassneckSpider(scrapy.Spider):
 
     def parse(self, response):
         brewery = Brewery()
+        brewery['last_updated'] = datetime.datetimee.utcnow()
         brewery['name'] = 'Main Street Brewing'
         brewery['address'] = '261 East Seventh Avenue, Vancouver, BC'
         brewery['url'] = 'http://mainstreetbeer.ca/'
@@ -34,9 +36,10 @@ class BrassneckSpider(scrapy.Spider):
             url = beer.xpath('.//div[@class="work-info"]/a/@href').extract()
             item['url'] = url[0]
             name = beer.xpath('.//div[@class="vert-center"]/h3/text()').extract()
-            item['name'] = name[0]
+            item['name'] = name[0].upper()
             style = name[0].split()
-            item['style'] = style[-1].strip()
+            item['style'] = style[-1].upper()
+            item['abv'] = '--'
             brewery['tasting_room'].append(item)
 
         growlerWrapper = Selector(response).xpath("//div[@class='portfolio-wrap ']")[0]
@@ -46,8 +49,10 @@ class BrassneckSpider(scrapy.Spider):
             url = beer.xpath('.//div[@class="work-info"]/a/@href').extract()
             item['url'] = url[0]
             name = beer.xpath('.//div[@class="vert-center"]/h3/text()').extract()
+            item['name'] = name[0].upper()
             style = name[0].split()
-            item['style'] = style[-1].strip()
+            item['style'] = style[-1].upper()
+            item['abv'] = '--'
             brewery['growlers'].append(item)
 
         yield brewery
