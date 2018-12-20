@@ -9,6 +9,7 @@ from scrapy.item import Item, Field;
 
 
 class Brewery(Item):
+    last_updated = Field()
     name = Field()
     address = Field()
     growlers = Field()

@@ -21,7 +21,7 @@ class BrassneckSpider(scrapy.Spider):
 
     def parse(self, response):
         brewery = Brewery()
-        brewery['last_updated'] = datetime.datetimee.utcnow()
+        brewery['last_updated'] = datetime.datetime.utcnow()
         brewery['name'] = 'Main Street Brewing'
         brewery['address'] = '261 East Seventh Avenue, Vancouver, BC'
         brewery['url'] = 'http://mainstreetbeer.ca/'
