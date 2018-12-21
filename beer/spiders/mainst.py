@@ -6,7 +6,7 @@ from beer.items import Brewery
 from beer.items import Beer
 
 
-class BrassneckSpider(scrapy.Spider):
+class MainStSpider(scrapy.Spider):
 
     name = 'mainst'
     allowed_domains = ['mainstreetbeer.ca']

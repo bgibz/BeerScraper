@@ -31,7 +31,6 @@ class BreweryPipeline(object):
         self.db = self.client[self.mongo_db]
 
     def close_spider(self, spider):
-        print('Close Spider!')
         # clean up when spider is closed
         self.client.close()
 
@@ -42,11 +41,9 @@ class BreweryPipeline(object):
         brewery = collection.find(query)
         if brewery is None:
             # add brewery
-            print('No existing brewery found')
             self.db[self.collection_name].insert(dict(item))
         else:
             # delete existing item, replace with scraped item
-            print('Replace existing brewery')
             collection.delete_one(query)
             collection.insert(dict(item))
         return item
